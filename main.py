@@ -125,39 +125,29 @@ for i in range(len(tfidf_lst)):
     cosSim_lst.append(cw/len(cosSim_words))
 print("Cos Sim list Size：",len(cosSim_lst))
 
-p = 0
 
-if p == 0:
-    ####### 要約をする（特徴度最大） #######
-    # 1行目：特徴度が最大な文をつ選ぶ
-    for i in range(len(rep_lst)):
-        if max(rep_lst) == rep_lst[i]:
-            print("TF-IDF：{:.5f}, Cos Sim：{:.5f} | {}".format(rep_lst[i], cosSim_lst[i], text[i]))
-            break
+####### 要約をする（特徴度最大） #######
+# 1行目：特徴度が最大な文をつ選ぶ
+for i in range(len(rep_lst)):
+    if max(rep_lst) == rep_lst[i]:
+        print("TF-IDF：{:.5f}, Cos Sim：{:.5f} | {}".format(rep_lst[i], cosSim_lst[i], text[i]))
+        break
 
-    # 2行目：特徴度が大きく、Cos類似度が低い文を選ぶ
-    # 代表値と(1 - Cos類似度)を掛け合わせることによって特徴を維持しつつベクトルを1つにすることができる。最大値を選ぶ。
-    # 1からCos類似度を引くことによって代表値に重みを持たせる。
-    ap = [rep_lst[i] * (1-cosSim_lst[i]) for i in range(len(rep_lst))]
-    for i in range(len(rep_lst)):
-        if min(ap) == rep_lst[i] * (1-cosSim_lst[i]):
-            print("TF-IDF：{:.5f}, Cos Sim：{:.5f} | {}".format(rep_lst[i], cosSim_lst[i], text[i]))
-            break
+# 2行目：特徴度が大きく、Cos類似度が低い文を選ぶ
+# 代表値と(1 - Cos類似度)を掛け合わせることによって特徴を維持しつつベクトルを1つにすることができる。最大値を選ぶ。
+# 1からCos類似度を引くことによって代表値に重みを持たせる。
+ap = [rep_lst[i] * (1-cosSim_lst[i]) for i in range(len(rep_lst))]
+for i in range(len(rep_lst)):
+    if min(ap) == rep_lst[i] * (1-cosSim_lst[i]):
+        print("TF-IDF：{:.5f}, Cos Sim：{:.5f} | {}".format(rep_lst[i], cosSim_lst[i], text[i]))
+        break
 
-    # 3行目：特徴度が大きく、Cos類似度が低い文を選ぶ
-    cosSim_lst.pop(i) # 最も低いCos類似度を削除
-    rep_lst.pop(i)    # 同じ場所を削除して合わせる
-    text.pop(i)       # 同じ場所を削除して合わせる
-    ap = [rep_lst[i] * (1-cosSim_lst[i]) for i in range(len(rep_lst))]
-    for i in range(len(rep_lst)):
-        if min(ap) == rep_lst[i] * (1-cosSim_lst[i]):
-            print("TF-IDF：{:.5f}, Cos Sim：{:.5f} | {}".format(rep_lst[i], cosSim_lst[i], text[i]))
-            break
-else:
-    ####### 要約をする（特徴度中間） #######
-    median_n = median(rep_lst)
-    for i in range(len(rep_lst)):
-        print(median_n, rep_lst[i])
-        if median_n == rep_lst[i]:
-            print("TF-IDF：{:.5f}, Cos Sim：{:.5f} | {}".format(rep_lst[i], cosSim_lst[i], text[i]))
-            break
+# 3行目：特徴度が大きく、Cos類似度が低い文を選ぶ
+cosSim_lst.pop(i) # 最も低いCos類似度を削除
+rep_lst.pop(i)    # 同じ場所を削除して合わせる
+text.pop(i)       # 同じ場所を削除して合わせる
+ap = [rep_lst[i] * (1-cosSim_lst[i]) for i in range(len(rep_lst))]
+for i in range(len(rep_lst)):
+    if min(ap) == rep_lst[i] * (1-cosSim_lst[i]):
+        print("TF-IDF：{:.5f}, Cos Sim：{:.5f} | {}".format(rep_lst[i], cosSim_lst[i], text[i]))
+        break
