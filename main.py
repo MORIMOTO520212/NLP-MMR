@@ -1,15 +1,17 @@
 import MeCab, math
 import numpy as np
+import matplotlib.pyplot as plt
 
 document = [] # 単語レベルのデータを格納する変数
 tf_lst = [] # TF（頻出度）を格納する変数
 idf_lst = [] # IDF（希少度）を格納する変数
-tfidf_lst = [] # 特徴度を格納数する変数
+tfidf_lst = [] # 代表値（代表性）を格納数する変数
 cosSim_lst = [] # Cos類似度を格納する変数
 rep_lst = [] # 単語のTF-IDF値を文でまとめた値を格納
+ap_lst = [] # 特徴度を文でまとめた値を格納
 
 # 1文に対するTFを求める。
-def appearance(tagger): # リストの文字列
+def appearance(tagger): # 行リスト
     # 出現数をカウントする
     text = tagger.copy()
     appearances_list = []
@@ -82,25 +84,24 @@ print("TF list Size：", len(tf_lst))
 print("IDF list Size：", len(idf_lst))
 
 
-####### TF・IDFで特徴度を求める #######
+####### TF-IDF値（特徴度）を求める #######
 for i in range(len(tf_lst)):
     tfidf = []
     for j in range(len(tf_lst[i])):
         tfidf.append(tf_lst[i][j] * idf_lst[i][j])
     tfidf_lst.append(tfidf)
 
-print("TF・IDF list Size：", len(tfidf_lst))
+print("TF-IDF list Size：", len(tfidf_lst))
 
 
-####### TF・IDFの最大値を取り出す #######
+####### 文の代表値を求める #######
 for _tfidf in tfidf_lst:
     rep_sum = 0
     for rep in _tfidf:
         rep_sum += rep # 単語のTF-IDF値を足し合わせる
     rep_lst.append(rep_sum) 
-
-print("Max of TF・IDF：", max(rep_lst))
-print("Min of TF・IDF：", min(rep_lst))
+print("Max of TF-IDF：", max(rep_lst))
+print("Min of TF-IDF：", min(rep_lst))
 
 
 ####### Cos類似度を求める #######
@@ -125,6 +126,9 @@ for i in range(len(tfidf_lst)):
     cosSim_lst.append(cw/len(cosSim_words))
 print("Cos Sim list Size：",len(cosSim_lst))
 
+####### 代表値とCos類似度から特徴度を求める #######
+ap_lst = [rep_lst[i] * (1-cosSim_lst[i]) for i in range(len(rep_lst))]
+
 
 ####### 要約をする（特徴度最大） #######
 # 1行目：特徴度が最大な文をつ選ぶ
@@ -136,9 +140,8 @@ for i in range(len(rep_lst)):
 # 2行目：特徴度が大きく、Cos類似度が低い文を選ぶ
 # 代表値と(1 - Cos類似度)を掛け合わせることによって特徴を維持しつつベクトルを1つにすることができる。最大値を選ぶ。
 # 1からCos類似度を引くことによって代表値に重みを持たせる。
-ap = [rep_lst[i] * (1-cosSim_lst[i]) for i in range(len(rep_lst))]
 for i in range(len(rep_lst)):
-    if min(ap) == rep_lst[i] * (1-cosSim_lst[i]):
+    if min(ap_lst) == rep_lst[i] * (1-cosSim_lst[i]):
         print("TF-IDF：{:.5f}, Cos Sim：{:.5f} | {}".format(rep_lst[i], cosSim_lst[i], text[i]))
         break
 
@@ -146,8 +149,8 @@ for i in range(len(rep_lst)):
 cosSim_lst.pop(i) # 最も低いCos類似度を削除
 rep_lst.pop(i)    # 同じ場所を削除して合わせる
 text.pop(i)       # 同じ場所を削除して合わせる
-ap = [rep_lst[i] * (1-cosSim_lst[i]) for i in range(len(rep_lst))]
+ap_lst.pop(i)
 for i in range(len(rep_lst)):
-    if min(ap) == rep_lst[i] * (1-cosSim_lst[i]):
+    if min(ap_lst) == rep_lst[i] * (1-cosSim_lst[i]):
         print("TF-IDF：{:.5f}, Cos Sim：{:.5f} | {}".format(rep_lst[i], cosSim_lst[i], text[i]))
         break
