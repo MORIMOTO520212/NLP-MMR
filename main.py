@@ -1,6 +1,5 @@
 import MeCab, math
 import numpy as np
-import matplotlib.pyplot as plt
 
 document = [] # 単語レベルのデータを格納する変数
 tf_lst = [] # TF（頻出度）を格納する変数
