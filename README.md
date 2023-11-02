@@ -1,5 +1,11 @@
 # 自然言語処理 MMR手法を使って文章要約をする
 
+![image](https://github.com/MORIMOTO520212/NLP-MMR/assets/28892090/673e5e27-fa69-4d54-a8f0-2495c2ca4244)
+![image](https://github.com/MORIMOTO520212/NLP-MMR/assets/28892090/894b54a1-d5d9-4461-a809-d1c136c9147e)
+![image](https://github.com/MORIMOTO520212/NLP-MMR/assets/28892090/bc47e991-6eb0-49f9-8b3b-3886d37ed300)
+![image](https://github.com/MORIMOTO520212/NLP-MMR/assets/28892090/5536757e-ecef-4448-a2bd-fc3521ab89d8)
+
+
 ・TF 単語の頻出度  
 ・IDF 単語の頻出度の逆数（希少度）  
 公式）IDF = log(全文書数÷その単語が登場する文書数)  
